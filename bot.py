@@ -13,11 +13,6 @@ load_dotenv()
 # Path to the JSON file
 SPARKLES_FILE = Path("sparkles.json")
 
-def save_sparkles(sparkles):
-    """Save the sparkles data to a JSON file."""
-    with open(SPARKLES_FILE, "w") as f:
-        json.dump(sparkles, f, indent=4)
-
 def load_sparkles():
     """Load the sparkles data from a JSON file."""
     if SPARKLES_FILE.exists():
@@ -35,8 +30,13 @@ class MyBot(commands.Bot):
         super().__init__(*args, **kwargs)
         self.sparkles = load_sparkles()  # Load sparkles data on startup
 
+    def save_sparkles(sparkles):
+    """Save the sparkles data to a JSON file."""
+    with open(SPARKLES_FILE, "w") as f:
+        json.dump(sparkles, f, indent=4)
+
     async def close(self):
-        save_sparkles(self.sparkles)  # Save sparkles data on shutdown
+        self.save_sparkles(self.sparkles)  # Save sparkles data on shutdown
         await super().close()
 
 bot = MyBot(command_prefix="!", intents=intents)
