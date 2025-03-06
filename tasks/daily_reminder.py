@@ -9,7 +9,7 @@ import pytz  # For timezone handling
 class DailyReminder:
     def __init__(self, bot):
         self.bot = bot
-        self.girlfriend_id = 312984580745330688  # Your girlfriend's Discord ID
+        self.girlfriend_id = environ.get("GIRLFRIEND_ID")
         self.london_tz = pytz.timezone("Europe/London")  # Timezone for London
         self.daily_reminder.start()  # Start the task when the class is initialized
 
