@@ -9,17 +9,17 @@ import pytz  # For timezone handling
 class DailyReminder:
     def __init__(self, bot):
         self.bot = bot
-        self.girlfriend_id = environ.get("GIRLFRIEND_ID")
+        self.girlfriend_id = 312984580745330688  # Your girlfriend's Discord ID
         self.london_tz = pytz.timezone("Europe/London")  # Timezone for London
         self.daily_reminder.start()  # Start the task when the class is initialized
 
     @tasks.loop(minutes=1)  # Check every minute
     async def daily_reminder(self):
         """
-        Sends a daily reminder to your girlfriend at 12 PM London Time.
+        Sends a daily reminder to girlfriend at 12 PM London Time.
         """
         now = datetime.now(self.london_tz)
-        if now.hour == 12 and now.minute == 0:  # 12:00 PM
+        if now.hour == 12  and now.minute == 0:
             try:
                 # Fetch the user object
                 girlfriend = await self.bot.fetch_user(self.girlfriend_id)

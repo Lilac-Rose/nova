@@ -10,7 +10,10 @@ class ForceSparkle(commands.Cog):
 
     @commands.hybrid_command(name="forcesparkle", description="Force a sparkle reaction on a message (only for you)")
     async def forcesparkle(self, ctx: commands.Context, message_id: str, reaction_type: str):
-        # Check if the user is Lilac
+        """
+        Forces a sparkle reaction on a message and updates the leaderboard.
+        """
+        # Check if the user is you
         if ctx.author.id != YOUR_USER_ID:
             await ctx.send("You don't have permission to use this command.", ephemeral=True)
             return
@@ -42,7 +45,22 @@ class ForceSparkle(commands.Cog):
         # Add the reaction
         emoji = valid_reactions[reaction_type.lower()]
         await message.add_reaction(emoji)
-        await ctx.send(f"Added {emoji} reaction to the message!", ephemeral=True)
+
+        # Update the leaderboard
+        server_id = str(ctx.guild.id)
+        user_id = str(message.author.id)
+
+        # Initialize server data if it doesn't exist
+        if server_id not in self.bot.sparkles:
+            self.bot.sparkles[server_id] = {}
+        if user_id not in self.bot.sparkles[server_id]:
+            self.bot.sparkles[server_id][user_id] = {"epic": 0, "rare": 0, "regular": 0}
+
+        # Increment the sparkle count
+        self.bot.sparkles[server_id][user_id][reaction_type.lower()] += 1
+        self.bot.save_sparkles(self.bot.sparkles)  # Save the updated data
+
+        await ctx.send(f"Added {emoji} reaction")
 
 async def setup(bot):
-    await bot.add_cog(ForceSparkle(bot))
+     await bot.add_cog(ForceSparkle(bot))
